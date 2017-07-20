@@ -15,6 +15,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     // Connect the collection view to the view controller (after creating this line, switch to the storyboard, right-click on the View Controller in the tree display and click-drag collection to the CollectionView on the storyboard).
     @IBOutlet weak var collection: UICollectionView!
     
+    var pokemon = [Pokemon]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -22,16 +24,44 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         collection.dataSource = self
         collection.delegate = self
         
+        parsePokemonCSV()
+        
+    }
+    
+    func parsePokemonCSV() {
+        
+        // Set the path to the pokemon.csv file
+        let path = Bundle.main.path(forResource: "pokemon", ofType: "csv")! // Ok to force-unwrap this, because we know the file exists.
+        
+        // Since the parser can throw an error, use a do-catch statement
+        do {
+            let csv = try CSV(contentsOfURL: path)
+            let rows = csv.rows
+            print(rows) // check in console to make sure this is working.
+            
+            // Grab the data from each csv row
+            for row in rows {
+                let pokeID = Int(row["id"]!)!
+                let name = row["identifier"]!
+                
+                // create a pokemon object, "poke", for each of those
+                let poke = Pokemon(name: name, pokedexID: pokeID)
+                
+                // attatch each poke to the pokemon array above
+                pokemon.append(poke)
+            }
+            
+        } catch let err as NSError {
+            print(err.debugDescription)
+        }
     }
     
     // This memory-friendly func sets-up and dequeues the cells on screen dynamically instead of loading all of the cells at once
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PokeCell", for: indexPath) as? PokeCell {
-            
-            // Get the cell images dynamically by pokedexID
-            let pokemon = Pokemon(name: "Pokemon", pokedexID: indexPath.row)
-            cell.configureCell(pokemon: pokemon) // calls the function created in PokeCell.swift
-            
+            //
+            let poke = pokemon[indexPath.row]
+            cell.configureCell(poke) // calls the function created in PokeCell.swift
             return cell
         } else {
             return UICollectionViewCell()
@@ -45,7 +75,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     // This func sets the number of items/objects in the collection view
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 30
+        return pokemon.count
     }
     
     // This func sets the number of sections in the collection view
