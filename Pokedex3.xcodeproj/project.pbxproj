@@ -20,6 +20,7 @@
 		D309295D1F204A4400D975B6 /* csv.swift in Sources */ = {isa = PBXBuildFile; fileRef = D309295C1F204A4400D975B6 /* csv.swift */; };
 		D309295F1F204E3700D975B6 /* pokemon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D309295E1F204E3700D975B6 /* pokemon.ttf */; };
 		D30929611F204F7900D975B6 /* music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D30929601F204F7900D975B6 /* music.mp3 */; };
+		D30929631F22A07300D975B6 /* PokemonDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30929621F22A07300D975B6 /* PokemonDetailVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		D309295C1F204A4400D975B6 /* csv.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = csv.swift; sourceTree = "<group>"; };
 		D309295E1F204E3700D975B6 /* pokemon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = pokemon.ttf; sourceTree = "<group>"; };
 		D30929601F204F7900D975B6 /* music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = music.mp3; sourceTree = "<group>"; };
+		D30929621F22A07300D975B6 /* PokemonDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonDetailVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +156,7 @@
 		D30929541F20384600D975B6 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				D30929621F22A07300D975B6 /* PokemonDetailVC.swift */,
 				D30929251F20336600D975B6 /* ViewController.swift */,
 			);
 			name = Controller;
@@ -326,6 +329,7 @@
 				D309295B1F2044E000D975B6 /* PokeCell.swift in Sources */,
 				D30929261F20336600D975B6 /* ViewController.swift in Sources */,
 				D30929241F20336600D975B6 /* AppDelegate.swift in Sources */,
+				D30929631F22A07300D975B6 /* PokemonDetailVC.swift in Sources */,
 				D30929591F203BFE00D975B6 /* Pokemon.swift in Sources */,
 				D309295D1F204A4400D975B6 /* csv.swift in Sources */,
 			);

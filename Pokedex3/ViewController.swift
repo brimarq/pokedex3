@@ -111,6 +111,16 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     // This func will execute when a cell is tapped.
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        var poke: Pokemon!
+        
+        // Account for the search mode option
+        if inSearchMode {
+            poke = filteredPokemon[indexPath.row]
+        } else {
+            poke = pokemon[indexPath.row]
+        }
+        
+        performSegue(withIdentifier: "PokemonDetailVC", sender: poke)
     }
     
     // This func sets the number of items/objects in the collection view
@@ -173,6 +183,19 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             
             // Repopulate the collection view with the filtered results
             collection.reloadData()
+        }
+    }
+    
+    // Prepare the data to be sent via the segue before it occurs
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "PokemonDetailVC" {
+            if let detailsVC = segue.destination as? PokemonDetailVC {
+                if let poke = sender as? Pokemon {
+                    
+                    // Set the pokemon var in the destination VC to the contents of poke var from this VC.
+                    detailsVC.pokemon = poke
+                }
+            }
         }
     }
     
