@@ -9,22 +9,30 @@
 import UIKit
 import AVFoundation
 
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
     
     // UICollectionViewDelegate, UICollectionViewDataSource and UICollectionViewDelegateFlowLayout protocols added here: this class will be the delegate, hold the data for, and set & modify the layout for the collection view.
     
-    // Connect the collection view to the view controller (after creating this line, switch to the storyboard, right-click on the View Controller in the tree display and click-drag collection to the CollectionView on the storyboard).
+    // Connect the collection view to the view controller
     @IBOutlet weak var collection: UICollectionView!
+    // Connect the search bar to the view controller
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var pokemon = [Pokemon]()
+    var filteredPokemon = [Pokemon]()
     var musicPlayer: AVAudioPlayer!
+    var inSearchMode = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Assign the delegate and data source to self
+        // Assign the dataSource and delegates to self
         collection.dataSource = self
         collection.delegate = self
+        searchBar.delegate = self
+        
+        // Change the text of the keyboard return key to "Done" for the searchBar function.
+        searchBar.returnKeyType = UIReturnKeyType.done
         
         parsePokemonCSV()
         initAudio()
@@ -79,9 +87,21 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     // This memory-friendly func sets-up and dequeues the cells on screen dynamically instead of loading all of the cells at once
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PokeCell", for: indexPath) as? PokeCell {
-            //
-            let poke = pokemon[indexPath.row]
-            cell.configureCell(poke) // calls the function created in PokeCell.swift
+            
+            let poke: Pokemon!
+            
+            if inSearchMode {
+                
+                // In searchMode, use the filtered pokemon list
+                poke = filteredPokemon[indexPath.row]
+                cell.configureCell(poke) // calls the function created in PokeCell.swift
+                
+            } else {
+                
+                // When not in searchMode, use the unfiltered pokemon list
+                poke = pokemon[indexPath.row]
+                cell.configureCell(poke) // calls the function created in PokeCell.swift
+            }
             return cell
         } else {
             return UICollectionViewCell()
@@ -95,6 +115,9 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     // This func sets the number of items/objects in the collection view
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if inSearchMode {
+            return filteredPokemon.count
+        }
         return pokemon.count
     }
     
@@ -117,6 +140,39 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         } else {
             musicPlayer.play()
             sender.alpha = 1.0
+        }
+    }
+    
+    // Removes keyboard when the search button is tapped.
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        view.endEditing(true)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        // When not in search mode (nothing in, or all text removed from searchBar)
+        if searchBar.text == nil || searchBar.text == "" {
+            
+            inSearchMode = false
+            
+            // Repopulate the collection view with the original list
+            collection.reloadData()
+            
+            // Remove keyboard when nothing is in the search bar
+            view.endEditing(true)
+            
+        } else {
+            
+            inSearchMode = true
+            
+            // Put content of searchBar entry as lowercased text into constant "lower"
+            let lower = searchBar.text!.lowercased()
+            
+            // Create a filtered pokemon list from the original pokemon list based on whether the entered search bar text is included within the range of the original names. The $0 is a placeholder for each item in the array.
+            filteredPokemon = pokemon.filter({$0.name.range(of: lower) != nil})
+            
+            // Repopulate the collection view with the filtered results
+            collection.reloadData()
         }
     }
     
