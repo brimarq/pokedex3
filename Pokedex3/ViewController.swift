@@ -65,7 +65,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         do {
             let csv = try CSV(contentsOfURL: path)
             let rows = csv.rows
-            print(rows) // check in console to make sure this is working.
+            //print(rows) // check in console to make sure this is working.
             
             // Grab the data from each csv row
             for row in rows {
